@@ -1,0 +1,13 @@
+.buttonIcon {
+  border: 1px solid #dfdfdf;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selected {
+  border: 2px solid #d47fa6;
+}

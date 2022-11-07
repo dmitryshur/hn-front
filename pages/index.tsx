@@ -1,17 +1,22 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import Layout from '../components/Layout/Layout';
-import Title from '../components/Title/Title';
-import Tags from '../components/Tags/Tags';
-import { TAGS } from '../components/Tags/constants';
-import type { TTag, ITag } from '../components/Tags/types';
+import { Header } from '../components/Header/Header';
+import { TType } from '../components/Header/types';
+import styles from './index.module.scss';
+
+const STORY = {
+  by: 'metadat',
+  descendants: 573,
+  id: 33330864,
+  score: 1463,
+  time: 1666707915,
+  title: "My dad's resume and skills from 1980",
+  url: 'https://github.com/runvnc/dadsresume',
+};
 
 export default function Home() {
-  const [selectedTag, setSelectedTag] = useState<TTag>('best');
-
-  const handleTagClick = (tag: ITag) => {
-    setSelectedTag(tag.id);
-  };
+  const [storiesType, setStoriesType] = useState<TType>('best');
 
   return (
     <Layout>
@@ -20,8 +25,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Title text="Hacker news" />
-      <Tags tags={TAGS} selectedTag={selectedTag} onClick={handleTagClick} />
+      <Header storiesType={storiesType} onTypeChange={setStoriesType} />
     </Layout>
   );
 }
