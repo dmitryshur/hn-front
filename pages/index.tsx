@@ -23,27 +23,35 @@ interface IProps {
   ssrStories: IStory[];
 }
 
+// TODO: add story page
+// TODO: add comments fetch on story page
+// TODO: build comments tree of story page
+// TODO: add next/previous top comment scroll
+// TODO: add virtualized list
 export default function Home({ ssrStories }: IProps) {
   const [storiesType, setStoriesType] = useState<TType>('best');
   const [stories, setStories] = useState<IStory[]>(ssrStories);
   const storiesRef = useRef<HTMLDivElement | null>(null);
   const lastStoryRef = useRef<HTMLDivElement | null>(null);
   const intersectionObserver = useRef<IntersectionObserver | null>(null);
-  const [pagination, setPagination] = useState<IPagination>({ page: 1, pageSize: PAGE_SIZE, isDone: false });
+  const [pagination, setPagination] = useState<IPagination>({ page: 2, pageSize: PAGE_SIZE, isDone: false });
   const { fetcher, isLoading } = useFetch<IStoriesResponse>({ url: STORIES_URL });
+
+  const fetchStories = async (type: TType, pag: IPagination) => {
+    const newStories = await fetcher(type, pag.page, pag.pageSize);
+    setStories((prevState) => [...prevState, ...(newStories.stories || [])]);
+    setPagination((prevState) => ({
+      ...prevState,
+      page: pag.page + 1,
+      isDone: newStories.stories === null,
+    }));
+  };
 
   const intersectionCallback = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && !pagination.isDone && !isLoading) {
-          fetcher(storiesType, pagination.page + 1, pagination.pageSize).then((data) => {
-            setStories((prevState) => [...prevState, ...(data.stories || [])]);
-            setPagination((prevState) => ({
-              ...prevState,
-              page: prevState.page + 1,
-              isDone: data.stories === null,
-            }));
-          });
+          fetchStories(storiesType, pagination);
         }
       });
     },
@@ -56,6 +64,16 @@ export default function Home({ ssrStories }: IProps) {
       threshold: 0.2,
     };
   }, [storiesRef]);
+
+  const handleStoriesTypeChange = async (storiesType: TType) => {
+    const freshPagination = { page: 1, pageSize: PAGE_SIZE, isDone: false };
+
+    setPagination(freshPagination);
+    setStories([]);
+    setStoriesType(storiesType);
+
+    fetchStories(storiesType, freshPagination);
+  };
 
   // init intersection observer
   useEffect(() => {
@@ -76,7 +94,7 @@ export default function Home({ ssrStories }: IProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header storiesType={storiesType} onTypeChange={setStoriesType} />
+      <Header storiesType={storiesType} onTypeChange={handleStoriesTypeChange} />
       <div className={styles.stories} ref={storiesRef}>
         {stories.map((story, index) => (
           <Story
