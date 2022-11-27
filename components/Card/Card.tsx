@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
 import cn from 'classnames';
 import styles from './Card.module.scss';
 
@@ -8,10 +8,12 @@ interface IProps {
   style?: { [property: string]: string };
 }
 
-export function Card({ className, children, style }: IProps) {
+export const Card = forwardRef<HTMLDivElement, IProps>(({ className, children, style }, ref) => {
   return (
-    <div className={cn(styles.card, className)} style={style}>
+    <div className={cn(styles.card, className)} style={style} ref={ref}>
       {children}
     </div>
   );
-}
+});
+
+Card.displayName = 'Card';
