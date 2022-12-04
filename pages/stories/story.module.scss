@@ -1,0 +1,59 @@
+.storyLayout {
+  background-color: #231733;
+}
+
+.header {
+  align-items: flex-start;
+  background-color: #fff;
+  display: flex;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: -100px;
+  min-height: 200px;
+  padding: 120px 16px 16px 16px;
+  z-index: 2;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+
+  span {
+    margin-left: 16px;
+  }
+}
+
+.story {
+  background-color: #fff;
+  margin-top: -100px;
+  min-height: 200px;
+  padding: 120px 16px 16px 62px;
+  z-index: 1;
+}
+
+.storyInfo {
+
+}
+
+.author {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.meta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  color: #999;
+}
+
+.metaData {
+  font-size: 0.9rem;
+  margin-left: 16px;
+
+  span {
+    margin-right: 2px;
+  }
+}

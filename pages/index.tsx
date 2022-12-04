@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Layout from '../components/Layout/Layout';
 import { Header } from '../components/Header/Header';
@@ -23,7 +24,6 @@ interface IProps {
   ssrStories: IStory[];
 }
 
-// TODO: add story page
 // TODO: add comments fetch on story page
 // TODO: build comments tree of story page
 // TODO: add next/previous top comment scroll
@@ -97,14 +97,16 @@ export default function Home({ ssrStories }: IProps) {
       <Header storiesType={storiesType} onTypeChange={handleStoriesTypeChange} />
       <div className={styles.stories} ref={storiesRef}>
         {stories.map((story, index) => (
-          <Story
-            key={story.id}
-            index={index}
-            totalCount={stories.length}
-            story={story}
-            commentsCount={story.descendants}
-            ref={index === stories.length - 1 ? lastStoryRef : null}
-          />
+          <Link key={story.id} href={`/stories/${story.id}`}>
+            <Story
+              key={story.id}
+              index={index}
+              totalCount={stories.length}
+              story={story}
+              commentsCount={story.descendants}
+              ref={index === stories.length - 1 ? lastStoryRef : null}
+            />
+          </Link>
         ))}
       </div>
     </Layout>
