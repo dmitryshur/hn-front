@@ -8,14 +8,18 @@ import { Card } from '../../components/Card/Card';
 import { IStory } from '../../components/Story/types';
 import { getStoryDate } from '../../components/Story/utils';
 import styles from './story.module.scss';
+import { IComment } from '../../components/Comments/types';
 
 const STORY_URL = 'http://localhost:4000/v1/stories';
+const COMMENTS_URL = 'http://localhost:4000/v1/comments';
 
 interface IProps {
   story: IStory;
+  comments: IComment[];
 }
 
-export default function Story({ story }: IProps) {
+export default function Story({ story, comments }: IProps) {
+  console.log({comments})
   return (
     <Layout className={styles.storyLayout}>
       <Head>
@@ -57,12 +61,15 @@ export default function Story({ story }: IProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { story } = context.query;
-  const response = await fetch(`${STORY_URL}/${story}`);
-  const data = await response.json();
 
+  const storiesData = fetch(`${STORY_URL}/${story}`).then((data) => data.json());
+  const commentsData = fetch(`${COMMENTS_URL}?storyId=${story}`).then((data) => data.json());
+
+  const data = await Promise.all([storiesData, commentsData]);
   return {
     props: {
-      story: data.story,
+      story: data[0].story,
+      comments: data[1].comments,
     },
   };
 };
